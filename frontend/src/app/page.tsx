@@ -33,7 +33,11 @@ export default function Home() {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const res = await fetch("/api/chat", {
+      const apiUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:8000/api/chat"
+          : "/api/chat";
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
@@ -56,7 +60,7 @@ export default function Home() {
         updated[updated.length - 1] = {
           role: "assistant",
           content:
-            "Connection failed. Make sure the backend is running on port 8000.",
+            "Connection failed. In dev mode, make sure the FastAPI backend is running (uv run uvicorn api.index:app --reload).",
         };
         return updated;
       });

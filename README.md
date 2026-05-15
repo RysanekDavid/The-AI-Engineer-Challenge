@@ -46,13 +46,13 @@ npm run dev
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Health check |
-| POST | `/api/chat` | Streaming chat (`{"message": "..."}`) |
+| POST | `/api/chat` | Chat (`{"message": "..."}` → `{"reply": "..."}`) |
 
 ## Project Structure
 
 ```
 api/
-  index.py            # FastAPI backend with streaming
+  index.py            # FastAPI backend (deployed as Vercel Python function)
 frontend/
   src/app/
     page.tsx          # Chat UI
@@ -61,9 +61,14 @@ frontend/
   src/assets/
     logo.png          # GainzGPT logo
 .env                  # API key (gitignored)
-pyproject.toml        # Python deps
-vercel.json           # Deploy config
+pyproject.toml        # Python deps (local dev via uv)
+requirements.txt      # Python deps (Vercel deploy)
+vercel.json           # Monorepo deploy config
 ```
+
+## Deployment
+
+Single Vercel project deploys both Next.js frontend and the FastAPI backend as a Python serverless function. Vercel auto-detects `api/index.py` as a Python function; `vercel.json` rewrites `/api/*` to it. Make sure **Project Settings → Root Directory** is set to the repo root (not `frontend`), otherwise Vercel will miss the `api/` folder.
 
 ---
 

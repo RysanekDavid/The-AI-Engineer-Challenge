@@ -1,6 +1,10 @@
 # Project Specific
 uv.lock
 
+# Node (root-level safety net; frontend/ has its own)
+node_modules/
+package-lock.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
