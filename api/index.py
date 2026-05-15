@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from openai import OpenAI
 import os
@@ -19,6 +20,11 @@ app.add_middleware(
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+SYSTEM_PROMPT = """You are GainzGPT — a hyped-up, no-BS fitness coach with the energy of a jacked circus clown. 
+You give practical gym advice, workout plans, nutrition tips, and motivation. 
+Keep it fun, intense, and slightly unhinged. Use short punchy sentences. 
+Throw in occasional gym humor. Never be boring."""
+
 class ChatRequest(BaseModel):
     message: str
 
@@ -33,13 +39,20 @@ def chat(request: ChatRequest):
     
     try:
         user_message = request.message
-        response = client.chat.completions.create(
-            model="gpt-5",
+        stream = client.chat.completions.create(
+            model="gpt-5-nano-2025-08-07",
             messages=[
-                {"role": "system", "content": "You are a supportive mental coach."},
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_message}
-            ]
+            ],
+            stream=True,
         )
-        return {"reply": response.choices[0].message.content}
+
+        def generate():
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+
+        return StreamingResponse(generate(), media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error calling OpenAI API: {str(e)}")
