@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: "OPENAI_API_KEY not configured" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     if (!message || typeof message !== "string") {
       return NextResponse.json(
         { error: "Missing message field" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     const errorMessage = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json(
       { error: `Error calling OpenAI API: ${errorMessage}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
