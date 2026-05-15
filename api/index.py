@@ -17,7 +17,13 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = None
+
+def get_client():
+    global client
+    if client is None:
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    return client
 
 SYSTEM_PROMPT = """You are GainzGPT — a hyped-up, no-BS fitness coach with the energy of a jacked circus clown. 
 You give practical gym advice, workout plans, nutrition tips, and motivation. 
@@ -38,7 +44,7 @@ def chat(request: ChatRequest):
     
     try:
         user_message = request.message
-        response = client.chat.completions.create(
+        response = get_client().chat.completions.create(
             model="gpt-5-nano-2025-08-07",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},

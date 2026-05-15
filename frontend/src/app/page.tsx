@@ -33,9 +33,10 @@ export default function Home() {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const apiUrl = process.env.NODE_ENV === "development" 
-        ? "http://localhost:8000/api/chat" 
-        : "/api/chat";
+      const apiUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:8000/api/chat"
+          : "/api/chat";
       const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,7 +48,10 @@ export default function Home() {
       const data = await res.json();
       setMessages((prev) => {
         const updated = [...prev];
-        updated[updated.length - 1] = { role: "assistant", content: data.reply };
+        updated[updated.length - 1] = {
+          role: "assistant",
+          content: data.reply,
+        };
         return updated;
       });
     } catch {
