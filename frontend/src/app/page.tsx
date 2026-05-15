@@ -29,11 +29,14 @@ export default function Home() {
     setInput("");
     setLoading(true);
 
-    // Add empty assistant message that we'll stream into
+    // Add empty assistant message that we'll fill
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const res = await fetch("http://localhost:8000/api/chat", {
+      const apiUrl = process.env.NODE_ENV === "development" 
+        ? "http://localhost:8000/api/chat" 
+        : "/api/chat";
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
@@ -41,28 +44,12 @@ export default function Home() {
 
       if (!res.ok) throw new Error("Backend error");
 
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (!reader) throw new Error("No stream");
-
-      let done = false;
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
-        if (value) {
-          const chunk = decoder.decode(value, { stream: true });
-          setMessages((prev) => {
-            const updated = [...prev];
-            const last = updated[updated.length - 1];
-            updated[updated.length - 1] = {
-              ...last,
-              content: last.content + chunk,
-            };
-            return updated;
-          });
-        }
-      }
+      const data = await res.json();
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { role: "assistant", content: data.reply };
+        return updated;
+      });
     } catch {
       setMessages((prev) => {
         const updated = [...prev];

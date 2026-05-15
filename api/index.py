@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from openai import OpenAI
 import os
@@ -39,20 +38,13 @@ def chat(request: ChatRequest):
     
     try:
         user_message = request.message
-        stream = client.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-5-nano-2025-08-07",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_message}
             ],
-            stream=True,
         )
-
-        def generate():
-            for chunk in stream:
-                if chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
-
-        return StreamingResponse(generate(), media_type="text/plain")
+        return {"reply": response.choices[0].message.content}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error calling OpenAI API: {str(e)}")
