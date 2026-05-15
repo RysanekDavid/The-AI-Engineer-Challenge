@@ -1,6 +1,4 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/index.py" }
-  ]
+  "framework": "nextjs",
+  "rootDirectory": "frontend"
 }
