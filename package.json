@@ -1,0 +1,8 @@
+{
+  "name": "the-ai-engineer-challenge",
+  "private": true,
+  "comment": "Marker only — actual app lives in frontend/. Vercel reads next version from here for framework detection.",
+  "dependencies": {
+    "next": "16.2.6"
+  }
+}
