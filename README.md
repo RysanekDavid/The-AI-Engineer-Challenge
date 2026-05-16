@@ -210,7 +210,7 @@ I'm 25, never lifted before. I want to gain muscle and look bigger in 6 months. 
 **Result:**  
 
 <details>
-<summary>Click to expand response</summary>
+<summary><h3 style="display: inline-block; margin: 0;">📖 Click to expand full response</h3></summary>
 
 Boom. You're 25, new to lifting, and six months to look bigger is absolutely doable. Here's the bare-minimum to actually get gains without overcomplicating your life.
 
@@ -273,7 +273,7 @@ I want to build muscle but I'm a student on a tight budget — maybe 150 CZK per
 **Result:**  
 
 <details>
-<summary>Click to expand response</summary>
+<summary><h3 style="display: inline-block; margin: 0;">📖 Click to expand full response</h3></summary>
 
 Boom. You can build muscle on 150 CZK a day. Let's make it simple, solid, and cheap as hell.
 
@@ -331,7 +331,7 @@ I've been working out for a year but my arms are still skinny compared to the re
 **Result:**  
 
 <details>
-<summary>Click to expand response</summary>
+<summary><h3 style="display: inline-block; margin: 0;">📖 Click to expand full response</h3></summary>
 
 Boom. Arms grow when the volume is actually there for them. Here's a clean, no-bs plan to hammer biceps and triceps specifically.
 
@@ -496,11 +496,23 @@ Then rerun your vibe check and document:
 
 ---
 
-**Adjustments Made:**  
-<!-- Describe what you changed -->
+**Adjustments Made:** ⏳ *Not implemented in this iteration — planned for next round.*
 
-**Results:**  
-<!-- What improved? What didn’t? -->
+Based on the limitations surfaced in [Question #3](#question-3), the following improvements were considered and prioritized but not yet built:
+
+| # | Improvement | Why it matters | Status |
+|---|---|---|---|
+| 1 | **Stream responses (SSE)** | Long replies (e.g. the 6-month beginner plan) make the user wait 10+ seconds staring at a typing indicator. Streaming would surface tokens as the model generates them. | 🕐 Planned |
+| 2 | **Pass conversation history to the model** | Currently the backend only sends `[system, latest_user_message]` — follow-up questions ("can you increase the bench sets in that routine?") have no idea what "that routine" refers to. Sending the full message array would fix this. | 🕐 Planned |
+| 3 | **Persistent chat history (localStorage / DB)** | "New chat" wipes the screen, but users have no way to revisit a prior conversation. Even basic localStorage persistence would dramatically improve UX. | 🕐 Planned |
+| 4 | **Cancel / abort in-flight response** | Once you hit send, you wait. An `AbortController` on the fetch + a stop button in the UI would let users bail on a slow or unwanted response. | 🕐 Planned |
+| 5 | **Tighten CORS to specific origins** | `allow_origins=["*"]` is convenient but loose. Should be restricted to the actual Vercel domain + `http://localhost:3000`. | 🕐 Planned |
+| 6 | **Rate limiting on `/api/chat`** | Anyone with the URL can spam the endpoint and burn the OpenAI budget. A simple per-IP rate limit (e.g. via slowapi or a Vercel-edge solution) would mitigate this. | 🕐 Planned |
+| 7 | **Input length cap** | A user could paste a 50 KB prompt and we'd forward it to the API. Cap should match a reasonable token budget. | 🕐 Planned |
+
+**Top two for the next iteration:** items **#1 (streaming)** and **#2 (conversation history)** — together they would close the gap between "demo toy" and "actually usable fitness coach."
+
+**Results:** ⏳ *N/A — pending implementation.*
 
 ---
 
@@ -518,26 +530,3 @@ Then rerun your vibe check and document:
 
 
 </details>
-
-### 🎉 Congratulations! 
-
-You just deployed your first LLM-powered application! 🚀🚀🚀 Get on linkedin and post your results and experience! Make sure to tag us at @AIMakerspace!
-
-Here's a template to get your post started!
-
-```
-🚀🎉 Exciting News! 🎉🚀
-
-🏗️ Today, I'm thrilled to announce that I've successfully built and shipped my first-ever LLM using the powerful combination of , and the OpenAI API! 🖥️
-
-Check it out 👇
-[LINK TO APP]
-
-A big shoutout to the @AI Makerspace for all making this possible. Couldn't have done it without the incredible community there. 🤗🙏
-
-Looking forward to building with the community! 🙌✨ Here's to many more creations ahead! 🥂🎉
-
-Who else is diving into the world of AI? Let's connect! 🌐💡
-
-#FirstLLMApp 
-```
