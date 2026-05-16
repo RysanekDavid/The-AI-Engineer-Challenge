@@ -77,6 +77,12 @@ export default function Home() {
     }
   }
 
+  function handleNewChat() {
+    setMessages([]);
+    setInput("");
+    inputRef.current?.focus();
+  }
+
   return (
     <div className="flex flex-col h-screen">
       {/* Top bar */}
@@ -93,7 +99,29 @@ export default function Home() {
             GainzGPT
           </span>
         </div>
-        <span className="text-xs text-[var(--muted)]">YOU WANNA GAINZ?</span>
+        {messages.length === 0 ? (
+          <span className="text-xs text-[var(--muted)]">YOU WANNA GAINZ?</span>
+        ) : (
+          <button
+            onClick={handleNewChat}
+            disabled={loading}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-3.5 h-3.5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 3a.75.75 0 0 1 .75.75v5.5h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5h-5.5a.75.75 0 0 1 0-1.5h5.5v-5.5A.75.75 0 0 1 10 3Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            New chat
+          </button>
+        )}
       </div>
 
       {/* Messages area */}
